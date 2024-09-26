@@ -1,20 +1,33 @@
-import React, { Suspense, useState } from 'react';
+import { SIDE_BAR_COLLAPSED_WIDTH, SIDE_BAR_WIDTH } from '@/utils/constant';
 import {
   DesktopOutlined,
   FileOutlined,
+  LeftOutlined,
   PieChartOutlined,
+  RightOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Card, Flex, Image, Layout, Menu, theme } from 'antd';
+import { Button, Layout, Menu, theme } from 'antd';
+import React, { Suspense, useMemo, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import logo from '@/assets/default/logo.png';
-import Container from '@/hoc/Container';
+import styled from 'styled-components';
+import CHeader from './CHeader';
+import SpaceDiv from './SpaceDiv';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
+
+const ButtonCollapsed = styled(Button)`
+  position: absolute;
+  top: 85px;
+  right: -15px;
+  padding: 0 8px;
+  z-index: 100;
+  transition: background-color 0.3s;
+`;
 
 function getItem(
   label: React.ReactNode,
@@ -51,31 +64,59 @@ const MainLayout: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const widthSidebar = useMemo(
+    () => (collapsed ? SIDE_BAR_COLLAPSED_WIDTH : SIDE_BAR_WIDTH),
+    [collapsed],
+  );
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <SpaceDiv width={widthSidebar} />
       <Sider
         theme="light"
-        collapsible
         collapsed={collapsed}
+        collapsedWidth={SIDE_BAR_COLLAPSED_WIDTH}
         onCollapse={(value) => setCollapsed(value)}
+        width={SIDE_BAR_WIDTH}
+        style={{
+          position: 'fixed',
+          height: '100vh',
+          paddingRight: 10,
+        }}
       >
-        <Flex justify="center" align="center">
-          <Image width={100} height={70} src={logo} preview={false} />
-        </Flex>
+        <ButtonCollapsed
+          shape="circle"
+          type="default"
+          size="small"
+          onClick={() => setCollapsed(!collapsed)}
+          icon={
+            collapsed ? (
+              <RightOutlined style={{ color: '#cacaca' }} />
+            ) : (
+              <LeftOutlined style={{ color: '#cacaca' }} />
+            )
+          }
+        />
+        <div style={{ height: 70, width: '100%' }} />
         <Menu
           theme="light"
           defaultSelectedKeys={['1']}
           mode="inline"
           items={items}
+          style={{
+            borderRight: 'none',
+          }}
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <CHeader />
         <Content
           style={{
             margin: '16px',
-            minHeight: '100vh',
             background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+            padding: 16,
+            overflowY: 'auto',
           }}
         >
           <Suspense>

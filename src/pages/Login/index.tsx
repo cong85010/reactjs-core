@@ -1,4 +1,4 @@
-import SeoWrapper from '@/hoc/SeoWrapper';
+import Container from '@/hoc/Container';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ export const Component = function LoginPage(): JSX.Element {
   };
 
   return (
-    <SeoWrapper title="Login" description="Login page">
+    <Container title="Login" description="Login page">
       <div>
         <h2>Login</h2>
         <form onSubmit={handleLogin}>
@@ -53,6 +53,6 @@ export const Component = function LoginPage(): JSX.Element {
           <button type="submit">Login</button>
         </form>
       </div>
-    </SeoWrapper>
+    </Container>
   );
 };

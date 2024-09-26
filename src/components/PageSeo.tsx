@@ -1,17 +1,12 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-type SeoWrapperProps = {
+type PageSeoProps = {
   title?: string;
   description?: string;
-  children: React.ReactNode;
 };
 
-export default function SeoWrapper({
-  title,
-  description,
-  children,
-}: SeoWrapperProps) {
+export default function PageSeo({ title, description }: PageSeoProps) {
   return (
     <>
       <Helmet>
@@ -23,7 +18,6 @@ export default function SeoWrapper({
           content={description || 'Chào mừng đến với website chúng tôi'}
         />
       </Helmet>
-      {children}
     </>
   );
 }

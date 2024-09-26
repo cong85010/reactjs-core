@@ -1,13 +1,26 @@
-import { Breadcrumb, Card } from 'antd';
+import { Breadcrumb, BreadcrumbProps } from 'antd';
 import React from 'react';
+import PageSeo from '../components/PageSeo';
+import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
 
-export default function Container() {
+export default function Container({
+  title,
+  description,
+  breadcrumb,
+  children,
+}: {
+  title: string;
+  description?: string;
+  breadcrumb?: ItemType[];
+  children: React.ReactNode;
+}) {
   return (
-    <Card>
-      <Breadcrumb style={{ margin: '16px 0' }}>
-        <Breadcrumb.Item>User</Breadcrumb.Item>
-        <Breadcrumb.Item>Bill</Breadcrumb.Item>
-      </Breadcrumb>
-    </Card>
+    <div>
+      <PageSeo title={title} description={description} />
+      {breadcrumb && (
+        <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumb} />
+      )}
+      {children}
+    </div>
   );
 }
