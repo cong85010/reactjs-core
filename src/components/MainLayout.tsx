@@ -7,8 +7,10 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Card, Flex, Image, Layout, Menu, theme } from 'antd';
 import { Outlet } from 'react-router-dom';
+import logo from '@/assets/default/logo.png';
+import Container from '@/hoc/Container';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -52,13 +54,16 @@ const MainLayout: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
+        theme="light"
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="demo-logo-vertical" />
+        <Flex justify="center" align="center">
+          <Image width={100} height={70} src={logo} preview={false} />
+        </Flex>
         <Menu
-          theme="dark"
+          theme="light"
           defaultSelectedKeys={['1']}
           mode="inline"
           items={items}
@@ -66,27 +71,17 @@ const MainLayout: React.FC = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <Suspense>
-              <Outlet />
-            </Suspense>
-          </div>
+        <Content
+          style={{
+            margin: '16px',
+            minHeight: '100vh',
+            background: colorBgContainer,
+          }}
+        >
+          <Suspense>
+            <Outlet />
+          </Suspense>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
       </Layout>
     </Layout>
   );
