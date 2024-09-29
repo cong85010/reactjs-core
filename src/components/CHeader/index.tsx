@@ -4,7 +4,6 @@ import {
   Dropdown,
   Flex,
   Image,
-  List,
   Popover,
   Space,
   Typography,
@@ -14,16 +13,19 @@ import styled from 'styled-components';
 import logo from '@/assets/default/logo.png';
 import { SIDE_BAR_WIDTH } from '@/utils/constant';
 import { BellOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Notification } from '../Notification';
 
 const SHeader = styled(Header)`
   position: fixed;
   left: 0;
   height: 70px;
   padding: 0;
-  background: #ffffff;
   z-index: 100;
   width: 100%;
   border-bottom: 1px solid #f0f0f0;
+  background-color: #ffffff9f;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 `;
 
 const menusUser = [
@@ -47,36 +49,6 @@ const menusUser = [
     ],
   },
 ];
-const Notification = () => {
-  return (
-    <List style={{ width: 300 }}>
-      <List.Item>
-        <Flex justify="space-between" align="center">
-          <span>You have 1 new message</span>
-          <span>24h ago</span>
-        </Flex>
-      </List.Item>
-      <List.Item>
-        <Flex justify="space-between" align="center">
-          <span>You have 5 new notifications</span>
-          <span>2 days ago</span>
-        </Flex>
-      </List.Item>
-      <List.Item>
-        <Flex justify="space-between" align="center">
-          <span>You have 3 pending tasks</span>
-          <span>3 weeks ago</span>
-        </Flex>
-      </List.Item>
-      <List.Item>
-        <Flex justify="space-between" align="center">
-          <span>You have 7 unread emails</span>
-          <span>2 months ago</span>
-        </Flex>
-      </List.Item>
-    </List>
-  );
-};
 
 export default function CHeader() {
   return (
@@ -100,6 +72,7 @@ export default function CHeader() {
             style={{ paddingRight: 24 }}
           >
             <Popover
+              placement="bottomRight"
               content={<Notification />}
               title="Thông báo"
               trigger="click"
@@ -110,7 +83,12 @@ export default function CHeader() {
               />
             </Popover>
 
-            <Dropdown menu={{ items: menusUser }} trigger={['click']}>
+            <Dropdown
+              menu={{ items: menusUser }}
+              placement={'bottomRight'}
+              arrow
+              trigger={['click']}
+            >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
                   <Avatar icon={<UserOutlined />} />

@@ -1,39 +1,107 @@
 import Container from '@/hoc/Container';
-import { useNavigate } from 'react-router-dom';
+import { formatMoney, formatNumber } from '@/utils/function';
+import { Column, Tiny } from '@ant-design/charts';
 
-import React from 'react';
-import { Card, Row, Col, Statistic, Progress, Table, DatePicker } from 'antd';
+import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import {
-  LineChartOutlined,
-  RiseOutlined,
-  FallOutlined,
-} from '@ant-design/icons';
+  Card,
+  Col,
+  Divider,
+  Flex,
+  Progress,
+  ProgressProps,
+  Row,
+  Statistic,
+  StatisticProps,
+  Table,
+  Typography,
+} from 'antd';
+
+type CardStatisticProps = {
+  title: string;
+  value: number | string;
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
+  footer?: React.ReactNode;
+  children?: React.ReactNode;
+};
+
+const formatter: StatisticProps['formatter'] = (value: string | number) => (
+  <Typography.Text style={{ fontSize: 30, fontWeight: 500 }}>
+    {value}
+  </Typography.Text>
+);
+
+const CardStatistic = ({
+  title,
+  value,
+  prefix,
+  suffix,
+  footer,
+  children,
+}: CardStatisticProps) => {
+  return (
+    <Card
+      styles={{
+        body: {
+          paddingBottom: 10,
+        },
+      }}
+    >
+      <Statistic
+        title={title}
+        value={value}
+        prefix={prefix}
+        formatter={formatter}
+        suffix={suffix}
+      />
+      <Flex style={{ height: 70 }} align="end">
+        {children}
+      </Flex>
+      <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+      {footer}
+    </Card>
+  );
+};
+
+const PercentText = ({
+  name,
+  value,
+  isUp = false,
+}: {
+  name: string;
+  value: number;
+  isUp?: boolean;
+}) => {
+  return (
+    <Flex gap={5} wrap="nowrap">
+      <Typography.Text style={{ whiteSpace: 'nowrap' }}>
+        {name}:
+      </Typography.Text>{' '}
+      {value}%
+      {isUp ? (
+        <CaretUpFilled style={{ fontSize: 20, color: 'green' }} />
+      ) : (
+        <CaretDownFilled style={{ fontSize: 20, color: 'red' }} />
+      )}
+    </Flex>
+  );
+};
+
+const FooterStatistics = ({
+  text,
+  value,
+}: {
+  text: string;
+  value: number | string;
+}) => (
+  <Flex align="center" gap={10}>
+    <Typography.Text>{text}</Typography.Text>
+    <Typography.Text>{value}</Typography.Text>
+  </Flex>
+);
 
 const Dashboard = () => {
-  // Sample data for the bar chart
-  const salesData = [
-    { month: 'Jan', sales: 600 },
-    { month: 'Feb', sales: 300 },
-    { month: 'Mar', sales: 400 },
-    { month: 'Apr', sales: 200 },
-    { month: 'May', sales: 700 },
-    { month: 'Jun', sales: 800 },
-    { month: 'Jul', sales: 600 },
-    { month: 'Aug', sales: 1000 },
-    { month: 'Sep', sales: 700 },
-    { month: 'Oct', sales: 900 },
-    { month: 'Nov', sales: 400 },
-    { month: 'Dec', sales: 1200 },
-  ];
-
-  // Chart configuration
-  const barConfig = {
-    data: salesData,
-    xField: 'month',
-    yField: 'sales',
-    height: 200,
-  };
-
   // Data for the table
   const storeData = [
     { key: '1', store: 'Store 0', sales: 323234 },
@@ -57,45 +125,121 @@ const Dashboard = () => {
     },
   ];
 
+  const configArea = {
+    data: [
+      { date: '2023-09-21', value: 800 },
+      { date: '2023-09-22', value: 850 },
+      { date: '2023-09-23', value: 1000 },
+      { date: '2023-09-24', value: 700 },
+      { date: '2023-09-25', value: 1100 },
+    ],
+    xField: 'date',
+    yField: 'value',
+    shapeField: 'smooth',
+    tooltip: { channel: 'y', valueFormatter: '.1f' },
+    style: {
+      fill: 'linear-gradient(-90deg, white 0%, #ac63ac 100%)',
+      fillOpacity: 0.6,
+    },
+  };
+
+  const configColumn = {
+    data: [
+      { date: '2023-09-21', value: 800 },
+      { date: '2023-09-22', value: 850 },
+      { date: '2023-09-23', value: 1000 },
+      { date: '2023-09-24', value: 700 },
+      { date: '2023-09-25', value: 1100 },
+    ],
+    xField: 'date',
+    yField: 'value',
+    tooltip: { channel: 'y', valueFormatter: '.1f' },
+  };
+
+  const twoColors: ProgressProps['strokeColor'] = {
+    '0%': '#108ee9',
+    '100%': '#87d068',
+  };
+
+  const config = {
+    data: {
+      type: 'fetch',
+      value:
+        'https://gw.alipayobjects.com/os/antfincdn/iPY8JFnxdb/dodge-padding.json',
+    },
+    xField: '月份',
+    yField: '月均降雨量',
+    colorField: 'name',
+    group: true,
+    style: {
+      inset: 5,
+    },
+    height: 400,
+  };
+
   return (
     <div style={{ padding: 24 }}>
       <Row gutter={16}>
         <Col span={6}>
-          <Card>
-            <Statistic
-              title="Total Sales"
-              value={126560}
-              prefix="¥"
-              suffix={<LineChartOutlined />}
+          <CardStatistic
+            title="Total Sales"
+            value={formatMoney(200000)}
+            footer={
+              <FooterStatistics text="Hàng ngày" value={formatMoney(12000)} />
+            }
+          >
+            <Flex gap={10} align="end" wrap="wrap" style={{ flex: 1 }}>
+              <PercentText name="Weekly" value={12} />
+              <PercentText name="Yearly" value={9} isUp />
+            </Flex>
+          </CardStatistic>
+        </Col>
+        <Col span={6}>
+          <CardStatistic
+            title="Total Views"
+            value={formatNumber(6038)}
+            footer={<FooterStatistics text="Hàng ngày" value={502} />}
+          >
+            <Tiny.Area {...configArea} />
+          </CardStatistic>
+        </Col>
+        <Col span={6}>
+          <CardStatistic
+            title="Total Views"
+            value={formatNumber(6038)}
+            footer={<FooterStatistics text="Hàng ngày" value={502} />}
+          >
+            <Tiny.Column {...configColumn} />
+          </CardStatistic>
+        </Col>
+        <Col span={6}>
+          <CardStatistic
+            title="Total Process"
+            value={'80%'}
+            footer={
+              <Flex gap={10} align="end" wrap="wrap" style={{ flex: 1 }}>
+                <PercentText name="Weekly" value={12} />
+                <PercentText name="Yearly" value={9} isUp />
+              </Flex>
+            }
+          >
+            <Progress
+              percent={80}
+              strokeColor={twoColors}
+              size={['100%', 13]}
+              status="active"
             />
-            <Statistic title="Day Sales" value={12423} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Visitors" value={8846} />
-            <Statistic title="Daily Visitors" value={1234} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Transactions" value={6560} />
-            <Progress percent={60} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Operation Effectiveness" value={78} suffix="%" />
-            <Progress percent={78} status="active" />
-          </Card>
+          </CardStatistic>
         </Col>
       </Row>
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={16}>
-          <Card>{/* <Bar {...barConfig} /> */}</Card>
+          <Card title="Tổng quan">
+            <Column {...config} />
+          </Card>
         </Col>
         <Col span={8}>
-          <Card title="Store Sales Ranking">
+          <Card title="Store Sales Ranking" style={{ height: '100%' }}>
             <Table
               dataSource={storeData}
               columns={columns}
@@ -104,20 +248,11 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row>
-      <Row style={{ marginTop: 16 }}>
-        <Col span={24}>
-          <Card>
-            <DatePicker.RangePicker />
-          </Card>
-        </Col>
-      </Row>
     </div>
   );
 };
 
 export const Component = function AdminDashboard(): JSX.Element {
-  const navigate = useNavigate();
-
   return (
     <Container title="Admin Dashboard">
       <Dashboard />

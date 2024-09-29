@@ -1,17 +1,16 @@
 import { SIDE_BAR_COLLAPSED_WIDTH, SIDE_BAR_WIDTH } from '@/utils/constant';
 import {
-  DesktopOutlined,
-  FileOutlined,
   LeftOutlined,
+  OrderedListOutlined,
   PieChartOutlined,
+  PlusCircleOutlined,
+  ProductOutlined,
   RightOutlined,
-  TeamOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Layout, Menu, theme } from 'antd';
 import React, { Suspense, useMemo, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CHeader from './CHeader';
 import SpaceDiv from './SpaceDiv';
@@ -44,18 +43,11 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
+  getItem('Dashboard', '/dashboard', <PieChartOutlined />),
+  getItem('Sản phẩm', 'products', <ProductOutlined />, [
+    getItem('Danh sách', '/products', <OrderedListOutlined />),
+    getItem('Thêm mới', '/products/create', <PlusCircleOutlined />),
   ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [
-    getItem('Team 1', '6'),
-    getItem('Team 2', '8'),
-  ]),
-  getItem('Files', '9', <FileOutlined />),
 ];
 
 const MainLayout: React.FC = () => {
@@ -63,14 +55,20 @@ const MainLayout: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const widthSidebar = useMemo(
     () => (collapsed ? SIDE_BAR_COLLAPSED_WIDTH : SIDE_BAR_WIDTH),
     [collapsed],
   );
 
+  const openKeys = useMemo(
+    () => pathname.split('/').filter((x) => x)?.[0],
+    [pathname],
+  );
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', backgroundColor: colorBgContainer }}>
       <SpaceDiv width={widthSidebar} />
       <Sider
         theme="light"
@@ -100,12 +98,14 @@ const MainLayout: React.FC = () => {
         <div style={{ height: 70, width: '100%' }} />
         <Menu
           theme="light"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={[pathname]}
+          defaultOpenKeys={[openKeys]}
           mode="inline"
           items={items}
           style={{
             borderRight: 'none',
           }}
+          onSelect={({ key }) => navigate(key)}
         />
       </Sider>
       <Layout>
@@ -113,10 +113,10 @@ const MainLayout: React.FC = () => {
         <Content
           style={{
             margin: '16px',
-            background: colorBgContainer,
             borderRadius: borderRadiusLG,
             padding: 16,
             overflowY: 'auto',
+            height: '100% ',
           }}
         >
           <Suspense>
