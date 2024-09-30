@@ -13,7 +13,7 @@ import {
 import { AnyObject } from 'antd/es/_util/type';
 import { ColumnType } from 'antd/es/table';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FilterColumns from '../FilterColumns';
 
 type CTableProps = {
@@ -27,6 +27,7 @@ export default function CTable({
   columns,
   ...rest
 }: CTableProps) {
+  const navigate = useNavigate();
   const [filterColumns, setFilterColumns] = useState<ColumnType<AnyObject>[]>(
     columns ?? [],
   );
@@ -54,13 +55,15 @@ export default function CTable({
           {title ?? 'Danh sách'}
         </Typography.Title>
         <Flex gap={10} align="center">
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button
+            type="primary"
+            onClick={() => navigate(PRODUCT_ROUTE.CREATE)}
+            icon={<PlusOutlined />}
+          >
             Thêm mới
           </Button>
           <Tooltip title="Làm mới">
-            <Link to={PRODUCT_ROUTE.base}>
-              <Button type="default" icon={<ReloadOutlined />} />
-            </Link>
+            <Button type="default" icon={<ReloadOutlined />} />
           </Tooltip>
           <FilterColumns
             defaultColumns={columns ?? []}

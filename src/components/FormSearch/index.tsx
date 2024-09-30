@@ -16,6 +16,11 @@ export default function FormSearch() {
         onFinish={(values) => {
           console.log('Search:', values);
         }}
+        style={{
+          gap: 10,
+        }}
+        wrapperCol={{ span: 16 }}
+        labelAlign="left"
       >
         <Form.Item name="keyword" label="Từ khóa">
           <Input placeholder="Nhập từ khóa" />

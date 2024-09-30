@@ -7,33 +7,33 @@ import {
   Navigate,
   RouterProvider,
 } from 'react-router-dom';
-import BaseLayout from '../components/BaseLayout';
 import RootError from '../components/RootError';
 import MainLayout from '../components/MainLayout';
+import { DASHBOARD_ROUTE, PRODUCT_ROUTE } from '@/utils/routeUtils';
 
 /**
  * Application routes
  * https://reactrouter.com/en/main/routers/create-browser-router
  */
 export const router = createBrowserRouter([
-  {
-    path: '',
-    element: <BaseLayout />,
-    errorElement: <RootError />,
-    children: [{ path: 'login', lazy: () => import('../pages/Login') }],
-  },
+  // {
+  //   path: '',
+  //   element: <BaseLayout />,
+  //   errorElement: <RootError />,
+  //   children: [{ path: 'login', lazy: () => import('../pages/Login') }],
+  // },
   {
     path: '',
     element: <MainLayout />,
     errorElement: <RootError />,
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: 'dashboard', lazy: () => import('../pages/Dashboard') },
+      { index: true, element: <Navigate to={DASHBOARD_ROUTE} replace /> },
+      { path: DASHBOARD_ROUTE, lazy: () => import('../pages/Dashboard') },
       {
-        path: '/products/create',
+        path: PRODUCT_ROUTE.CREATE,
         lazy: () => import('../pages/Product/Create'),
       },
-      { path: '/products', lazy: () => import('../pages/Product/List') },
+      { path: PRODUCT_ROUTE.LIST, lazy: () => import('../pages/Product/List') },
     ],
   },
 ]);

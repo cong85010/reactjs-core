@@ -14,6 +14,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CHeader from './CHeader';
 import SpaceDiv from './SpaceDiv';
+import { DASHBOARD_ROUTE, PRODUCT_ROUTE } from '@/utils/routeUtils';
 
 const { Content, Sider } = Layout;
 
@@ -43,10 +44,10 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Dashboard', '/dashboard', <PieChartOutlined />),
-  getItem('Sản phẩm', 'products', <ProductOutlined />, [
-    getItem('Danh sách', '/products', <OrderedListOutlined />),
-    getItem('Thêm mới', '/products/create', <PlusCircleOutlined />),
+  getItem('Dashboard', DASHBOARD_ROUTE, <PieChartOutlined />),
+  getItem('Sản phẩm', PRODUCT_ROUTE.BASE, <ProductOutlined />, [
+    getItem('Danh sách', PRODUCT_ROUTE.LIST, <OrderedListOutlined />),
+    getItem('Thêm mới', PRODUCT_ROUTE.CREATE, <PlusCircleOutlined />),
   ]),
 ];
 
@@ -66,6 +67,8 @@ const MainLayout: React.FC = () => {
     () => pathname.split('/').filter((x) => x)?.[0],
     [pathname],
   );
+
+  console.log(openKeys);
 
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: colorBgContainer }}>

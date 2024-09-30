@@ -10,7 +10,7 @@ export const Component = function List() {
       showTitle
       breadcrumb={[
         { path: '/', title: 'Dashboard' },
-        { path: '/products', title: 'Sản phẩm' },
+        { path: '/products/list', title: 'Sản phẩm' },
       ]}
     >
       <Flex vertical gap={20}>
