@@ -16,15 +16,11 @@ const ListColumn = ({
   onUpdate: (e: ColumnType[]) => void;
 }) => {
   const handleChange = (e: CheckboxChangeEvent, col: ColumnType) => {
-    console.log('====================================');
-    console.log(col);
-    console.log('====================================');
-
     e.stopPropagation();
+
     const newColumns = list?.map((column) => ({
       ...column,
-      hidden:
-        col.dataIndex === column.dataIndex ? !e.target.checked : column.hidden,
+      hidden: col.key === column.key ? !e.target.checked : column.hidden,
     }));
 
     onUpdate(newColumns ?? []);
@@ -33,12 +29,10 @@ const ListColumn = ({
   const handleUpdate = (newColumns: ColumnsType) => {
     onUpdate(newColumns ?? []);
   };
-
   const formatList = list?.map((item) => ({
-    id: item.dataIndex,
-    title: item.title,
-    dataIndex: item.dataIndex,
-    hidden: item.hidden,
+    ...item,
+    id: item.key as string,
+    hidden: !!item.hidden,
   }));
 
   return (
@@ -69,10 +63,6 @@ export default function FilterColumns({
   const isCheckedAll = useMemo(() => {
     return columns?.every((column) => !column.hidden);
   }, [columns]);
-
-  console.log('====================================');
-  console.log(isCheckedAll);
-  console.log('====================================');
 
   const handleCheckAll = useCallback(
     (e: CheckboxChangeEvent) => {

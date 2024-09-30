@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Layout, Menu, theme } from 'antd';
-import React, { Suspense, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CHeader from './CHeader';
@@ -29,21 +29,28 @@ const ButtonCollapsed = styled(Button)`
   transition: background-color 0.3s;
 `;
 
+type MenuItemProps = {
+  key: string | number | bigint;
+  label: React.ReactNode;
+  icon: React.ReactNode;
+  children?: MenuItem[];
+};
+
 function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-): MenuItem {
+): MenuItemProps {
   return {
     key,
     icon,
     children,
     label,
-  } as MenuItem;
+  };
 }
 
-const items: MenuItem[] = [
+const items: MenuItemProps[] = [
   getItem('Dashboard', DASHBOARD_ROUTE, <PieChartOutlined />),
   getItem('Sản phẩm', PRODUCT_ROUTE.BASE, <ProductOutlined />, [
     getItem('Danh sách', PRODUCT_ROUTE.LIST, <OrderedListOutlined />),
@@ -62,13 +69,17 @@ const MainLayout: React.FC = () => {
     () => (collapsed ? SIDE_BAR_COLLAPSED_WIDTH : SIDE_BAR_WIDTH),
     [collapsed],
   );
+  const [selectedMenu, setSelectedMenu] = useState(DASHBOARD_ROUTE);
 
-  const openKeys = useMemo(
-    () => pathname.split('/').filter((x) => x)?.[0],
-    [pathname],
-  );
+  useEffect(() => {
+    const key = items.find((item) =>
+      pathname.startsWith(item.key.toString()),
+    )?.key;
 
-  console.log(openKeys);
+    if (key) {
+      setSelectedMenu(key.toString());
+    }
+  }, [pathname]);
 
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: colorBgContainer }}>
@@ -101,14 +112,21 @@ const MainLayout: React.FC = () => {
         <div style={{ height: 70, width: '100%' }} />
         <Menu
           theme="light"
+          defaultOpenKeys={[selectedMenu]}
           defaultSelectedKeys={[pathname]}
-          defaultOpenKeys={[openKeys]}
+          selectedKeys={[pathname]}
           mode="inline"
           items={items}
           style={{
             borderRight: 'none',
           }}
-          onSelect={({ key }) => navigate(key)}
+          openKeys={[selectedMenu]}
+          onSelect={({ key }) => {
+            navigate(key.toString());
+          }}
+          onOpenChange={(openKeys) => {
+            setSelectedMenu(openKeys[1] as string);
+          }}
         />
       </Sider>
       <Layout>

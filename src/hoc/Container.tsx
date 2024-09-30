@@ -4,18 +4,13 @@ import PageSeo from '../components/PageSeo';
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
 import { Link } from 'react-router-dom';
 
-function itemRender(
-  currentRoute: ItemType,
-  params: unknown,
-  items: ItemType[],
-  paths: string[],
-) {
+function itemRender(currentRoute: ItemType, items: ItemType[]) {
   const isLast = currentRoute?.path === items[items.length - 1]?.path;
 
   return isLast ? (
     <span>{currentRoute.title}</span>
   ) : (
-    <Link to={`/${paths.join('/')}`}>{currentRoute.title}</Link>
+    <Link to={currentRoute.path ?? '#'}>{currentRoute.title}</Link>
   );
 }
 
