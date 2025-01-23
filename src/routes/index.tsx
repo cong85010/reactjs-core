@@ -11,10 +11,10 @@ import RootError from '../components/RootError';
 import MainLayout from '../components/MainLayout';
 import { DASHBOARD_ROUTE, PRODUCT_ROUTE } from '@/utils/routeUtils';
 
-/**
- * Application routes
- * https://reactrouter.com/en/main/routers/create-browser-router
- */
+const DashboardPage = () => import('../pages/Dashboard');
+const ProductCreatePage = () => import('../pages/Product/Create');
+const ProductListPage = () => import('../pages/Product/List');
+
 export const router = createBrowserRouter([
   // {
   //   path: '',
@@ -28,12 +28,12 @@ export const router = createBrowserRouter([
     errorElement: <RootError />,
     children: [
       { index: true, element: <Navigate to={DASHBOARD_ROUTE} replace /> },
-      { path: DASHBOARD_ROUTE, lazy: () => import('../pages/Dashboard') },
+      { path: DASHBOARD_ROUTE, lazy: DashboardPage },
       {
         path: PRODUCT_ROUTE.CREATE,
-        lazy: () => import('../pages/Product/Create'),
+        lazy: ProductCreatePage,
       },
-      { path: PRODUCT_ROUTE.LIST, lazy: () => import('../pages/Product/List') },
+      { path: PRODUCT_ROUTE.LIST, lazy: ProductListPage },
     ],
   },
 ]);

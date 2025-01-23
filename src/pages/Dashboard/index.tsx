@@ -1,105 +1,11 @@
+import CardStatistic from '@/components/Dashboard/CardStatistic';
+import FooterStatistics from '@/components/Dashboard/FooterStatistics';
+import PercentText from '@/components/Dashboard/PercentText';
 import Container from '@/hoc/Container';
 import { formatMoney, formatNumber } from '@/utils/function';
 import { Column, Tiny } from '@ant-design/charts';
 
-import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
-import {
-  Card,
-  Col,
-  Divider,
-  Flex,
-  Progress,
-  ProgressProps,
-  Row,
-  Statistic,
-  StatisticProps,
-  Table,
-  Typography,
-} from 'antd';
-
-type CardStatisticProps = {
-  title: string;
-  value: number | string;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
-  footer?: React.ReactNode;
-  children?: React.ReactNode;
-};
-
-const formatter: StatisticProps['formatter'] = (value: string | number) => (
-  <Typography.Text style={{ fontSize: 30, fontWeight: 500 }}>
-    {value}
-  </Typography.Text>
-);
-
-const CardStatistic = ({
-  title,
-  value,
-  prefix,
-  suffix,
-  footer,
-  children,
-}: CardStatisticProps) => {
-  return (
-    <Card
-      styles={{
-        body: {
-          paddingBottom: 10,
-        },
-      }}
-    >
-      <Statistic
-        title={title}
-        value={value}
-        prefix={prefix}
-        formatter={formatter}
-        suffix={suffix}
-      />
-      <Flex style={{ height: 70 }} align="end">
-        {children}
-      </Flex>
-      <Divider style={{ marginTop: 10, marginBottom: 10 }} />
-      {footer}
-    </Card>
-  );
-};
-
-const PercentText = ({
-  name,
-  value,
-  isUp = false,
-}: {
-  name: string;
-  value: number;
-  isUp?: boolean;
-}) => {
-  return (
-    <Flex gap={5} wrap="nowrap">
-      <Typography.Text style={{ whiteSpace: 'nowrap' }}>
-        {name}:
-      </Typography.Text>{' '}
-      {value}%
-      {isUp ? (
-        <CaretUpFilled style={{ fontSize: 20, color: 'green' }} />
-      ) : (
-        <CaretDownFilled style={{ fontSize: 20, color: 'red' }} />
-      )}
-    </Flex>
-  );
-};
-
-const FooterStatistics = ({
-  text,
-  value,
-}: {
-  text: string;
-  value: number | string;
-}) => (
-  <Flex align="center" gap={10}>
-    <Typography.Text>{text}</Typography.Text>
-    <Typography.Text>{value}</Typography.Text>
-  </Flex>
-);
+import { Card, Col, Flex, Progress, ProgressProps, Row, Table } from 'antd';
 
 const Dashboard = () => {
   // Data for the table
